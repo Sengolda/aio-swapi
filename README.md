@@ -29,7 +29,7 @@ import asyncio
 
 client = Client()
 async def main():
-    person = (await http.get_person(4)) # get person by id
+    person = (await client.get_person(4)) # get person by id
     print(person.name)
     await client.close() # close the http client
 
@@ -42,7 +42,7 @@ import asyncio
 
 client = Client()
 async def main():
-    results = (await http.search_people("skywalker")) # search by name
+    results = (await client.search_people("skywalker")) # search by name
     for person in results:
         print(person.name)
     await client.close() # close the http client
