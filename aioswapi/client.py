@@ -1,9 +1,8 @@
 from .http import HTTPClient
 from .objects import Film, Person, Planet, Starship, Vehicle, Specie
 
-__all__ = (
-    "Client",
-)
+__all__ = ("Client",)
+
 
 class Client:
     def __init__(self) -> None:
@@ -28,75 +27,73 @@ class Client:
     async def get_planet(self, planet_id: int):
         raw_data = await self.http.request("planets/{0}".format(planet_id))
         return Planet(raw_data, http=self.http)
-    
+
     async def get_specie(self, specie_id: int):
         raw_data = await self.http.request("species/{0}".format(specie_id))
         return Specie(raw_data, http=self.http)
-    
+
     async def _all_data(self, _type):
         data = await self.http.request(_type)
         count = 0
         results = {count: data["results"]}
         next = True
         while next:
-           next_page = data.get("next")
-           if next_page:
-               data = await self.http.request(next_page)
-               next_page = data['next']
-               count += 1
-               results[count] = data["results"]
-           else:
-               next = False
+            next_page = data.get("next")
+            if next_page:
+                data = await self.http.request(next_page)
+                next_page = data["next"]
+                count += 1
+                results[count] = data["results"]
+            else:
+                next = False
         return results
-    
+
     async def get_all_planets(self):
         raw_data = await self._all_data("planets")
         returning = []
         for key in raw_data.keys():
-               for item in raw_data[key]:
-                  returning.append(Planet(item, http=self.http))
+            for item in raw_data[key]:
+                returning.append(Planet(item, http=self.http))
         return returning
-
 
     async def get_all_vehicles(self):
         raw_data = await self._all_data("vehicles")
         returning = []
         for key in raw_data.keys():
-               for item in raw_data[key]:
-                  returning.append(Vehicle(item, http=self.http))
+            for item in raw_data[key]:
+                returning.append(Vehicle(item, http=self.http))
         return returning
 
     async def get_all_people(self):
         raw_data = await self._all_data("people")
         returning = []
         for key in raw_data.keys():
-               for item in raw_data[key]:
-                  returning.append(Person(item, http=self.http))
+            for item in raw_data[key]:
+                returning.append(Person(item, http=self.http))
         return returning
-
 
     async def get_all_films(self):
         raw_data = await self._all_data("films")
         returning = []
         for key in raw_data.keys():
-               for item in raw_data[key]:
-                  returning.append(Film(item, http=self.http))
+            for item in raw_data[key]:
+                returning.append(Film(item, http=self.http))
         return returning
-    
+
     async def get_all_species(self):
         raw_data = await self._all_data("species")
         returning = []
         for key in raw_data.keys():
-               for item in raw_data[key]:
-                  returning.append(Specie(item, http=self.http))
+            for item in raw_data[key]:
+                returning.append(Specie(item, http=self.http))
         return returning
-    
+
     async def get_all_starships(self):
         raw_data = await self._all_data("starships")
         returning = []
         for key in raw_data.keys():
-               for item in raw_data[key]:
-                  returning.append(Specie(item, http=self.http))
+            for item in raw_data[key]:
+                returning.append(Specie(item, http=self.http))
         return returning
 
     async def search_people(self, query: str, page: int = 1):
@@ -148,7 +145,7 @@ class Client:
         for planet_data in results:
             returning.append(Planet(planet_data, http=self.http))
         return returning
-    
+
     async def search_species(self, query: str, page: int = 1):
         raw_data = await self.http.request("species", params={"search": query, "page": page})
         results = raw_data.get("results")

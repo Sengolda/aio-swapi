@@ -40,7 +40,7 @@ class HTTPClient:
 
         headers: Dict[str, Any] = {aiohttp.hdrs.USER_AGENT: self.user_agent}
         data = None
-        # Sometimes the API returns None for some reason 
+        # Sometimes the API returns None for some reason
         # so we have to wait until we actually have some data, this is not due to ratelimits.
         while not data:
             try:
