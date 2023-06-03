@@ -1,5 +1,6 @@
 from .http import HTTPClient
 from .objects import Film, Person, Planet, Starship, Vehicle, Specie
+from functools import lru_cache
 
 __all__ = ("Client",)
 
@@ -48,6 +49,7 @@ class Client:
                 next = False
         return results
 
+    @lru_cache(maxsize=None)
     async def get_all_planets(self):
         raw_data = await self._all_data("planets")
         returning = []
@@ -56,6 +58,7 @@ class Client:
                 returning.append(Planet(item, http=self.http))
         return returning
 
+    @lru_cache(maxsize=None)
     async def get_all_vehicles(self):
         raw_data = await self._all_data("vehicles")
         returning = []
@@ -64,6 +67,7 @@ class Client:
                 returning.append(Vehicle(item, http=self.http))
         return returning
 
+    @lru_cache(maxsize=None)
     async def get_all_people(self):
         raw_data = await self._all_data("people")
         returning = []
@@ -72,6 +76,7 @@ class Client:
                 returning.append(Person(item, http=self.http))
         return returning
 
+    @lru_cache(maxsize=None)
     async def get_all_films(self):
         raw_data = await self._all_data("films")
         returning = []
@@ -80,6 +85,7 @@ class Client:
                 returning.append(Film(item, http=self.http))
         return returning
 
+    @lru_cache(maxsize=None)
     async def get_all_species(self):
         raw_data = await self._all_data("species")
         returning = []
@@ -88,6 +94,8 @@ class Client:
                 returning.append(Specie(item, http=self.http))
         return returning
 
+
+    @lru_cache(maxsize=None)
     async def get_all_starships(self):
         raw_data = await self._all_data("starships")
         returning = []
