@@ -97,8 +97,9 @@ class Person(_Object):
     async def get_species(self):
         species = []
         for specie in species:
-            raw_data = await self.http.request(self.species)
+            raw_data = await self.http.request(specie)
             species.append(Specie(raw_data, http=self.http))
+        self.species = species
         return species
 
 
@@ -109,6 +110,7 @@ class Planet(_Object):
         for resident in self.residents:
             raw_data = await self.http.request(resident)
             residents.append(Person(raw_data, http=self.http))
+        self.residents = residents
         return residents
 
     @lru_cache(maxsize=None)
@@ -117,6 +119,7 @@ class Planet(_Object):
         for film in self.films:
             raw_data = await self.http.request(film)
             films.append(Film(raw_data))
+        self.films = films
         return films
 
 
@@ -127,6 +130,7 @@ class Specie(_Object):
         for person in self.people:
             raw_data = await self.http.request(person)
             people.append(Person(raw_data, http=self.http))
+        self.people = people
         return people
 
     @lru_cache(maxsize=None)
@@ -135,6 +139,7 @@ class Specie(_Object):
         for film in self.films:
             raw_data = await self.http.request(film)
             films.append(Film(raw_data, http=self.http))
+        self.films = films
         return films
 
 
@@ -145,6 +150,7 @@ class Starship(_Object):
         for pilot in self.pilots:
             raw_data = await self.http.request(pilot)
             pilots.append(Person(raw_data, http=self.http))
+        self.pilots = pilots
         return pilots
 
     @lru_cache(maxsize=None)
@@ -153,6 +159,7 @@ class Starship(_Object):
         for film in self.films:
             raw_data = await self.http.request(film)
             films.append(Film(raw_data, http=self.http))
+        self.films = films
         return films
 
 
