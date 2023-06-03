@@ -6,6 +6,7 @@ __all__ = (
     "Starship",
     "Film",
     "Vehicle",
+    "Specie",
 )
 
 
@@ -119,7 +120,7 @@ class Planet(_Object):
         return films
 
 
-class Specie:
+class Specie(_Object):
     @lru_cache(maxsize=None)
     async def get_people(self):
         people = []

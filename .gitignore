@@ -20,7 +20,6 @@ __pycache__/*
 .vscode
 tags
 
-tests/
 # Package files
 *.egg
 *.eggs/
