@@ -9,31 +9,31 @@ class Client:
     def __init__(self) -> None:
         self.http = HTTPClient()
 
-    async def get_person(self, person_id: int):
+    async def get_person(self, person_id: int) -> Person:
         raw_data = await self.http.request("people/{0}".format(person_id))
         return Person(raw_data, http=self.http)
 
-    async def get_film(self, film_id: int):
+    async def get_film(self, film_id: int) -> Film:
         raw_data = await self.http.request("films/{0}".format(film_id))
         return Film(raw_data, http=self.http)
 
-    async def get_starship(self, starship_id: int):
+    async def get_starship(self, starship_id: int) -> Starship:
         raw_data = await self.http.request("starships/{0}".format(starship_id))
         return Starship(raw_data, http=self.http)
 
-    async def get_vehicle(self, vehicle_id: int):
+    async def get_vehicle(self, vehicle_id: int) -> Vehicle:
         raw_data = await self.http.request("vehicles/{0}".format(vehicle_id))
         return Vehicle(raw_data, http=self.http)
 
-    async def get_planet(self, planet_id: int):
+    async def get_planet(self, planet_id: int) -> Planet:
         raw_data = await self.http.request("planets/{0}".format(planet_id))
         return Planet(raw_data, http=self.http)
 
-    async def get_specie(self, specie_id: int):
+    async def get_specie(self, specie_id: int) -> Specie:
         raw_data = await self.http.request("species/{0}".format(specie_id))
         return Specie(raw_data, http=self.http)
 
-    async def _all_data(self, _type):
+    async def _all_data(self, _type: str):
         data = await self.http.request(_type)
         count = 0
         results = {count: data["results"]}
