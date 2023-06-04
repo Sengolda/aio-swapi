@@ -1,1 +1,2 @@
 aiohttp>=3.0.0
+async_lru

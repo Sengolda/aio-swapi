@@ -1,8 +1,8 @@
-from functools import lru_cache
 from types import TracebackType
-from typing import Optional, Type, TypeVar
+from typing import Optional, Type, TypeVar, List
 
 from .http import HTTPClient
+from async_lru import alru_cache
 from .objects import Film, Person, Planet, Specie, Starship, Vehicle
 
 BE = TypeVar("BE", bound=BaseException)
@@ -12,6 +12,10 @@ __all__ = ("Client",)
 
 
 class Client:
+    """
+    Represents a client
+    """
+
     def __init__(self) -> None:
         self.http = HTTPClient()
 
@@ -24,26 +28,69 @@ class Client:
         await self.close()
 
     async def get_person(self, person_id: int) -> Person:
+        """Gets a person by id
+        
+        Parameters
+        ---------
+           person_id: :class:`int`
+              The ID of the person in the API
+        """
         raw_data = await self.http.request("people/{0}".format(person_id))
         return Person(raw_data, http=self.http)
 
     async def get_film(self, film_id: int) -> Film:
+        """Gets a film by id
+        
+        Parameters
+        ---------
+           film_id: :class:`int`
+              The ID of the film in the API
+        """
+
         raw_data = await self.http.request("films/{0}".format(film_id))
         return Film(raw_data, http=self.http)
 
     async def get_starship(self, starship_id: int) -> Starship:
+        """Gets a starship by id
+        
+        Parameters
+        ---------
+           starship_id: :class:`int`
+              The ID of the starship in the API
+        """
         raw_data = await self.http.request("starships/{0}".format(starship_id))
         return Starship(raw_data, http=self.http)
 
     async def get_vehicle(self, vehicle_id: int) -> Vehicle:
+        """Gets a vehicle by id
+        
+        Parameters
+        ---------
+           vehicle_id: :class:`int`
+              The ID of the vehicle in the API
+        """
         raw_data = await self.http.request("vehicles/{0}".format(vehicle_id))
         return Vehicle(raw_data, http=self.http)
 
     async def get_planet(self, planet_id: int) -> Planet:
+        """Gets a planet by id
+        
+        Parameters
+        ---------
+           planet_id: :class:`int`
+              The ID of the planet in the API
+        """
         raw_data = await self.http.request("planets/{0}".format(planet_id))
         return Planet(raw_data, http=self.http)
 
     async def get_specie(self, specie_id: int) -> Specie:
+        """Gets a specie by id
+        
+        Parameters
+        ---------
+           specie_id: :class:`int`
+              The ID of the specie in the API
+        """
         raw_data = await self.http.request("species/{0}".format(specie_id))
         return Specie(raw_data, http=self.http)
 
@@ -63,8 +110,15 @@ class Client:
                 next = False
         return results
 
-    @lru_cache(maxsize=None)
+    @alru_cache(maxsize=None)
     async def get_all_planets(self):
+        """
+        Gets all the planets in the API
+
+        Returns
+        --------
+        Returns a list of :class:`~aioswapi.Planet`
+        """
         raw_data = await self._all_data("planets")
         returning = []
         for key in raw_data.keys():
@@ -72,8 +126,15 @@ class Client:
                 returning.append(Planet(item, http=self.http))
         return returning
 
-    @lru_cache(maxsize=None)
+    @alru_cache(maxsize=None)
     async def get_all_vehicles(self):
+        """
+        Gets all the vehicles in the API
+
+        Returns
+        --------
+        Returns a list of :class:`~aioswapi.Vehic;e`
+        """
         raw_data = await self._all_data("vehicles")
         returning = []
         for key in raw_data.keys():
@@ -81,8 +142,15 @@ class Client:
                 returning.append(Vehicle(item, http=self.http))
         return returning
 
-    @lru_cache(maxsize=None)
-    async def get_all_people(self):
+    @alru_cache(maxsize=None)
+    async def get_all_people(self) -> List[Person]:
+        """
+        Gets all the people in the API
+
+        Returns
+        --------
+        Returns a list of :class:`~aioswapi.Person`
+        """
         raw_data = await self._all_data("people")
         returning = []
         for key in raw_data.keys():
@@ -90,8 +158,15 @@ class Client:
                 returning.append(Person(item, http=self.http))
         return returning
 
-    @lru_cache(maxsize=None)
-    async def get_all_films(self):
+    @alru_cache(maxsize=None)
+    async def get_all_films(self) -> List[Film]:
+        """
+        Gets all the film in the API
+
+        Returns
+        --------
+        Returns a list of :class:`~aioswapi.Film`
+        """
         raw_data = await self._all_data("films")
         returning = []
         for key in raw_data.keys():
@@ -99,8 +174,15 @@ class Client:
                 returning.append(Film(item, http=self.http))
         return returning
 
-    @lru_cache(maxsize=None)
-    async def get_all_species(self):
+    @alru_cache(maxsize=None)
+    async def get_all_species(self) -> List[Specie]:
+        """
+        Gets all the species in the API
+
+        Returns
+        --------
+        Returns a list of :class:`~aioswapi.Specie`
+        """
         raw_data = await self._all_data("species")
         returning = []
         for key in raw_data.keys():
@@ -108,8 +190,15 @@ class Client:
                 returning.append(Specie(item, http=self.http))
         return returning
 
-    @lru_cache(maxsize=None)
-    async def get_all_starships(self):
+    @alru_cache(maxsize=None)
+    async def get_all_starships(self) -> List[Starship]:
+        """
+        Gets all the starships in the API
+
+        Returns
+        --------
+        Returns a list of :class:`~aioswapi.Starship`
+        """
         raw_data = await self._all_data("starships")
         returning = []
         for key in raw_data.keys():
@@ -117,65 +206,102 @@ class Client:
                 returning.append(Specie(item, http=self.http))
         return returning
 
-    async def search_people(self, query: str, page: int = 1):
-        raw_data = await self.http.request("people", params={"page": page, "search": query})
-        results = raw_data.get("results")
-        if not results:
-            return []
-        returning = []
-        for person_data in results:
-            returning.append(Person(person_data, http=self.http))
-        return returning
 
-    async def search_films(self, query: str, page: int = 1):
-        raw_data = await self.http.request("films", params={"page": page, "search": query})
-        results = raw_data.get("results")
-        if not results:
-            return []
-        returning = []
-        for film_data in results:
-            returning.append(Film(film_data, http=self.http))
-        return returning
+    async def search_people(self, query: str) -> List[Person]:
+        """
+        Searches people by name
 
-    async def search_starships(self, query: str, page: int = 1):
-        raw_data = await self.http.request("starships", params={"search": query, "page": page})
-        results = raw_data.get("results")
-        if not results:
-            return []
-        returning = []
-        for starship_data in results:
-            returning.append(Starship(starship_data, http=self.http))
-        return returning
+        Parameters
+        ---------
+        query: :class:`str` The search query you are looking for
 
-    async def search_vehicles(self, query: str, page: int = 1):
-        raw_data = await self.http.request("starships", params={"search": query, "page": page})
-        results = raw_data.get("results")
-        if not results:
-            return []
-        returning = []
-        for vehicle_data in results:
-            returning.append(Vehicle(vehicle_data, http=self.http))
-        return returning
+        Returns
+        --------
+        Returns a list of :class:`~aioswapi.Person`
+        """
+        all_people = await self.get_all_people()
+        query_matched_results = [person for person in all_people if query.lower() in person.name.lower()]
+        return query_matched_results
 
-    async def search_planets(self, query: str, page: int = 1):
-        raw_data = await self.http.request("planets", params={"search": query, "page": page})
-        results = raw_data.get("results")
-        if not results:
-            return []
-        returning = []
-        for planet_data in results:
-            returning.append(Planet(planet_data, http=self.http))
-        return returning
+    async def search_films(self, query: str) -> List[Film]:
+        """
+        Searches films by title
 
-    async def search_species(self, query: str, page: int = 1):
-        raw_data = await self.http.request("species", params={"search": query, "page": page})
-        results = raw_data.get("results")
-        if not results:
-            return []
-        returning = []
-        for planet_data in results:
-            returning.append(Specie(planet_data, http=self.http))
-        return returning
+        Parameters
+        ---------
+        query: :class:`str` The search query you are looking for
+
+        Returns
+        --------
+        Returns a list of :class:`~aioswapi.Film`
+        """
+        all_films = await self.get_all_films()
+        query_matched_results = [film for film in all_films if query.lower() in film.title.lower()]
+        return query_matched_results
+
+    async def search_starships(self, query: str) -> List[Starship]:
+        """
+        Searches starships by name
+
+        Parameters
+        ---------
+        query: :class:`str` The search query you are looking for
+
+        Returns
+        --------
+        Returns a list of :class:`~aioswapi.Starship`
+        """
+        all_starships = await self.get_all_starships()
+        query_matched_results = [starship for starship in all_starships if query.lower() in starship.name.lower()]
+        return query_matched_results
+
+    async def search_vehicles(self, query: str) -> List[Vehicle]:
+        """
+        Searches vehicles by name
+
+        Parameters
+        ---------
+        query: :class:`str` The search query you are looking for
+
+        Returns
+        --------
+        Returns a list of :class:`~aioswapi.Vehicle`
+        """
+        all_vehicles = await self.get_all_vehicles()
+        query_matched_results = [vehicle for vehicle in all_vehicles if query.lower() in vehicle.name.lower()]
+        return query_matched_results
+
+    async def search_planets(self, query: str):
+        """
+        Searches planets by name
+
+        Parameters
+        ---------
+        query: :class:`str` The search query you are looking for
+
+        Returns
+        --------
+        Returns a list of :class:`~aioswapi.Planet`
+        """
+        all_planets = await self.get_all_planets()
+        query_matched_results = [planet for planet in all_planets if query.lower() in planet.name.lower()]
+        return query_matched_results
+
+    async def search_species(self, query: str):
+        """
+        Searches planets by name
+
+        Parameters
+        ---------
+        query: :class:`str` The search query you are looking for
+
+        Returns
+        --------
+        Returns a list of :class:`~aioswapi.Specie`
+        """
+        all_species = await self.get_all_species()
+        query_matched_results = [specie for specie in all_species if query.lower() in specie.name.lower()]
+        return query_matched_results
 
     @property
     def close(self):
