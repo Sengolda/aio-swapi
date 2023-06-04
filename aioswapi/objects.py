@@ -1,4 +1,5 @@
 from functools import lru_cache
+from typing import List
 
 __all__ = (
     "Person",
@@ -11,7 +12,7 @@ __all__ = (
 
 
 class _Object:
-    def __init__(self, raw_data: dict, *, http):
+    def __init__(self, raw_data: dict, *, http) -> None:
         self.raw_data = raw_data
         self.http = http
         for key, value in raw_data.items():
@@ -23,7 +24,7 @@ class _Object:
 
 class Film(_Object):
     @lru_cache(maxsize=None)
-    async def get_starships(self):
+    async def get_starships(self) -> List["Starship"]:
         starships = []
         for starship in self.starships:
             raw_data = await self.http.request(starship)
@@ -32,7 +33,7 @@ class Film(_Object):
         return starships
 
     @lru_cache(maxsize=None)
-    async def get_characters(self):
+    async def get_characters(self) -> List["Person"]:
         characters = []
         for character in self.characters:
             raw_data = await self.http.request(character)
@@ -41,7 +42,7 @@ class Film(_Object):
         return characters
 
     @lru_cache(maxsize=None)
-    async def get_vehicles(self):
+    async def get_vehicles(self) -> List["Vehicle"]:
         vehicles = []
         for vehicle in self.vehicle:
             raw_data = await self.http.request(vehicle)
@@ -50,7 +51,7 @@ class Film(_Object):
         return vehicles
 
     @lru_cache(maxsize=None)
-    async def get_planets(self):
+    async def get_planets(self) -> List["Planet"]:
         planets = []
         for planet in self.planels:
             raw_data = await self.http.request(planet)
@@ -59,7 +60,7 @@ class Film(_Object):
         return planets
 
     @lru_cache(maxsize=None)
-    async def get_species(self):
+    async def get_species(self) -> List["Specie"]:
         species = []
         for specie in self.species:
             raw_data = await self.http.request(specie)
@@ -70,7 +71,7 @@ class Film(_Object):
 
 class Person(_Object):
     @lru_cache(maxsize=None)
-    async def get_films(self):
+    async def get_films(self) -> List[Film]:
         films = []
         for film in self.films:
             raw_data = await self.http.request(film)
@@ -79,7 +80,7 @@ class Person(_Object):
         return films
 
     @lru_cache(maxsize=None)
-    async def get_starships(self):
+    async def get_starships(self) -> List["Starship"]:
         starships = []
         for starship in self.starships:
             raw_data = await self.http.request(starship)
@@ -88,13 +89,13 @@ class Person(_Object):
         return starships
 
     @lru_cache(maxsize=None)
-    async def get_homeworld(self):
+    async def get_homeworld(self) -> "Planet":
         raw_data = await self.http.request(self.homeworld)
         self.homeworld = homeworld = Planet(raw_data, http=self.http)
         return homeworld
 
     @lru_cache(maxsize=None)
-    async def get_species(self):
+    async def get_species(self) -> List["Specie"]:
         species = []
         for specie in species:
             raw_data = await self.http.request(specie)
@@ -105,7 +106,7 @@ class Person(_Object):
 
 class Planet(_Object):
     @lru_cache(maxsize=None)
-    async def get_residents(self):
+    async def get_residents(self) -> List[Person]:
         residents = []
         for resident in self.residents:
             raw_data = await self.http.request(resident)
@@ -114,18 +115,18 @@ class Planet(_Object):
         return residents
 
     @lru_cache(maxsize=None)
-    async def get_films(self):
+    async def get_films(self) -> List[Film]:
         films = []
         for film in self.films:
             raw_data = await self.http.request(film)
-            films.append(Film(raw_data))
+            films.append(Film(raw_data, http=self.http))
         self.films = films
         return films
 
 
 class Specie(_Object):
     @lru_cache(maxsize=None)
-    async def get_people(self):
+    async def get_people(self) -> List[Person]:
         people = []
         for person in self.people:
             raw_data = await self.http.request(person)
@@ -134,7 +135,7 @@ class Specie(_Object):
         return people
 
     @lru_cache(maxsize=None)
-    async def get_films(self):
+    async def get_films(self) -> List[Film]:
         films = []
         for film in self.films:
             raw_data = await self.http.request(film)
@@ -145,7 +146,7 @@ class Specie(_Object):
 
 class Starship(_Object):
     @lru_cache(maxsize=None)
-    async def get_pilots(self):
+    async def get_pilots(self) -> List[Person]:
         pilots = []
         for pilot in self.pilots:
             raw_data = await self.http.request(pilot)
@@ -154,7 +155,7 @@ class Starship(_Object):
         return pilots
 
     @lru_cache(maxsize=None)
-    async def get_films(self):
+    async def get_films(self) -> List[Film]:
         films = []
         for film in self.films:
             raw_data = await self.http.request(film)

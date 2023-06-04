@@ -1,4 +1,3 @@
-from . import http
 from .client import *
 from .objects import *
 

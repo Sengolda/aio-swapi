@@ -2,16 +2,14 @@ from __future__ import annotations
 
 import json
 import sys
-from typing import Any, Dict, Optional, Union
+from typing import Any, Dict, Optional
 
 import aiohttp
-import pkginfo
 
 
 BASE_URL = "https://swapi.dev/api"
 
-
-async def json_or_text(response: aiohttp.ClientResponse) -> Union[Dict[str, Any], str]:
+async def json_or_text(response: aiohttp.ClientResponse) -> Dict[str, Any]:
     text = await response.text(encoding="utf-8")
 
     if response.headers["content-type"] == "application/json":
