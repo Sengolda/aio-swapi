@@ -1,6 +1,12 @@
-from .http import HTTPClient
-from .objects import Film, Person, Planet, Starship, Vehicle, Specie
 from functools import lru_cache
+from types import TracebackType
+from typing import Optional, Type, TypeVar
+
+from .http import HTTPClient
+from .objects import Film, Person, Planet, Specie, Starship, Vehicle
+
+BE = TypeVar("BE", bound=BaseException)
+C = TypeVar("C", bound="Client")
 
 __all__ = ("Client",)
 
@@ -8,6 +14,14 @@ __all__ = ("Client",)
 class Client:
     def __init__(self) -> None:
         self.http = HTTPClient()
+
+    async def __aenter__(self) -> C:
+        return self
+
+    async def __aexit__(
+        self, exc_type: Optional[Type[BE]], exc_value: Optional[BE], exc_traceback: Optional[TracebackType]
+    ) -> None:
+        await self.close()
 
     async def get_person(self, person_id: int) -> Person:
         raw_data = await self.http.request("people/{0}".format(person_id))
@@ -93,7 +107,6 @@ class Client:
             for item in raw_data[key]:
                 returning.append(Specie(item, http=self.http))
         return returning
-
 
     @lru_cache(maxsize=None)
     async def get_all_starships(self):

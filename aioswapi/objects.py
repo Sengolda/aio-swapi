@@ -44,7 +44,7 @@ class Film(_Object):
     @lru_cache(maxsize=None)
     async def get_vehicles(self) -> List["Vehicle"]:
         vehicles = []
-        for vehicle in self.vehicle:
+        for vehicle in self.vehicles:
             raw_data = await self.http.request(vehicle)
             vehicles.append(Vehicle(raw_data, http=self.http))
         self.vehicles = vehicles
@@ -53,7 +53,7 @@ class Film(_Object):
     @lru_cache(maxsize=None)
     async def get_planets(self) -> List["Planet"]:
         planets = []
-        for planet in self.planels:
+        for planet in self.planets:
             raw_data = await self.http.request(planet)
             planets.append(Planet(raw_data, http=self.http))
         self.planets = planets

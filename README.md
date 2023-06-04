@@ -27,11 +27,10 @@ Docs are not ready yet so here are a couple of examples
 from aioswapi import Client
 import asyncio
 
-client = Client()
 async def main():
-    person = (await client.get_person(4)) # get person by id
-    print(person.name)
-    await client.close() # close the http client
+    async with Client() as c:
+        result = await c.get_person(4)
+        print(result.name)
 
 asyncio.run(main())
 ```
@@ -40,12 +39,27 @@ Example for searching
 from aioswapi import Client
 import asyncio
 
+async def main():
+    async with Client() as c:
+        results = await c.search_people("skywalker")
+        for person in results:
+            print(person.name)
+
+asyncio.run(main())
+```
+
+### Examples without context managers
+
+```python
+from aioswapi import Client
+import asyncio
+
 client = Client()
 async def main():
-    results = (await client.search_people("skywalker")) # search by name
-    for person in results:
-        print(person.name)
-    await client.close() # close the http client
+    person = (await client.get_person(4)) # get person by id
+    print(person.name)
+    await client.close() # close the http client 
+    # this is not required to do when using context managers
 
 asyncio.run(main())
 ```

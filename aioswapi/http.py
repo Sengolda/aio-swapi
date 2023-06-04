@@ -6,8 +6,8 @@ from typing import Any, Dict, Optional
 
 import aiohttp
 
-
 BASE_URL = "https://swapi.dev/api"
+
 
 async def json_or_text(response: aiohttp.ClientResponse) -> Dict[str, Any]:
     text = await response.text(encoding="utf-8")
@@ -49,5 +49,5 @@ class HTTPClient:
                 pass
 
     async def close(self):
-        if not self.session.closed:
+        if self.session and not self.session.closed:
             await self.session.close()
