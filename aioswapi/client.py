@@ -111,7 +111,7 @@ class Client:
         return results
 
     @alru_cache(maxsize=None)
-    async def get_all_planets(self):
+    async def get_all_planets(self) -> List[Planet]:
         """
         Gets all the planets in the API
 
@@ -127,7 +127,7 @@ class Client:
         return returning
 
     @alru_cache(maxsize=None)
-    async def get_all_vehicles(self):
+    async def get_all_vehicles(self) -> List[Vehicle]:
         """
         Gets all the vehicles in the API
 
@@ -203,7 +203,7 @@ class Client:
         returning = []
         for key in raw_data.keys():
             for item in raw_data[key]:
-                returning.append(Specie(item, http=self.http))
+                returning.append(Starship(item, http=self.http))
         return returning
 
 
