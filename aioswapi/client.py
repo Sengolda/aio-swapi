@@ -1,12 +1,18 @@
+from __future__ import annotations
+
 from types import TracebackType
-from typing import Optional, Type, TypeVar, List
+from typing import TYPE_CHECKING, TypeVar
+
+if TYPE_CHECKING:
+    from typing_extensions import Self
+    from typing import Optional, Type, List
+
+from async_lru import alru_cache
 
 from .http import HTTPClient
-from async_lru import alru_cache
 from .objects import Film, Person, Planet, Specie, Starship, Vehicle
 
 BE = TypeVar("BE", bound=BaseException)
-C = TypeVar("C", bound="Client")
 
 __all__ = ("Client",)
 
@@ -19,7 +25,7 @@ class Client:
     def __init__(self) -> None:
         self.http = HTTPClient()
 
-    async def __aenter__(self) -> C:
+    async def __aenter__(self) -> Self:
         return self
 
     async def __aexit__(
@@ -29,7 +35,7 @@ class Client:
 
     async def get_person(self, person_id: int) -> Person:
         """Gets a person by id
-        
+
         Parameters
         ---------
            person_id: :class:`int`
@@ -40,7 +46,7 @@ class Client:
 
     async def get_film(self, film_id: int) -> Film:
         """Gets a film by id
-        
+
         Parameters
         ---------
            film_id: :class:`int`
@@ -52,7 +58,7 @@ class Client:
 
     async def get_starship(self, starship_id: int) -> Starship:
         """Gets a starship by id
-        
+
         Parameters
         ---------
            starship_id: :class:`int`
@@ -63,7 +69,7 @@ class Client:
 
     async def get_vehicle(self, vehicle_id: int) -> Vehicle:
         """Gets a vehicle by id
-        
+
         Parameters
         ---------
            vehicle_id: :class:`int`
@@ -74,7 +80,7 @@ class Client:
 
     async def get_planet(self, planet_id: int) -> Planet:
         """Gets a planet by id
-        
+
         Parameters
         ---------
            planet_id: :class:`int`
@@ -85,7 +91,7 @@ class Client:
 
     async def get_specie(self, specie_id: int) -> Specie:
         """Gets a specie by id
-        
+
         Parameters
         ---------
            specie_id: :class:`int`
@@ -205,7 +211,6 @@ class Client:
             for item in raw_data[key]:
                 returning.append(Starship(item, http=self.http))
         return returning
-
 
     async def search_people(self, query: str) -> List[Person]:
         """

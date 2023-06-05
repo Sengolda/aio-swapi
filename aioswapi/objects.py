@@ -1,6 +1,8 @@
 from typing import List
-from .utils import copy_doc
+
 from async_lru import alru_cache
+
+from .utils import copy_doc
 
 __all__ = (
     "Person",
@@ -25,7 +27,7 @@ class _Object:
 
 class Film(_Object):
     """Represents a film"""
-       
+
     @alru_cache(maxsize=None)
     async def get_starships(self) -> List["Starship"]:
         """Returns a list of :class:`~aioswapi.Starship` objects that appeared in this film"""
@@ -37,11 +39,9 @@ class Film(_Object):
         self.starships = starships
         return starships
 
-       
     @alru_cache(maxsize=None)
     async def get_characters(self) -> List["Person"]:
-        """Returns a list of :class:`~aioswapi.Person` objects
-        """
+        """Returns a list of :class:`~aioswapi.Person` objects"""
 
         characters = []
         for character in self.characters:
@@ -50,7 +50,6 @@ class Film(_Object):
         self.characters = characters
         return characters
 
-       
     @alru_cache(maxsize=None)
     async def get_vehicles(self) -> List["Vehicle"]:
         """Returns a list of :class:`~aioswapi.Vehicle` objects"""
@@ -62,7 +61,6 @@ class Film(_Object):
         self.vehicles = vehicles
         return vehicles
 
-       
     @alru_cache(maxsize=None)
     async def get_planets(self) -> List["Planet"]:
         """Returns a list of :class:`~aioswapi.Planet` objects"""
@@ -73,7 +71,6 @@ class Film(_Object):
         self.planets = planets
         return planets
 
-       
     @alru_cache(maxsize=None)
     async def get_species(self) -> List["Specie"]:
         """Returns a list of :class:`~aioswapi.Specie` objects"""
@@ -86,7 +83,6 @@ class Film(_Object):
 
 
 class Person(_Object):
-       
     @alru_cache(maxsize=None)
     async def get_films(self) -> List[Film]:
         """Returns a list of :class:`~aioswapi.Film` objects"""
@@ -97,7 +93,6 @@ class Person(_Object):
         self.films = films
         return films
 
-       
     @copy_doc(Film.get_starships)
     @alru_cache(maxsize=None)
     async def get_starships(self) -> List["Starship"]:
@@ -108,7 +103,6 @@ class Person(_Object):
         self.starships = starships
         return starships
 
-       
     @alru_cache(maxsize=None)
     async def get_homeworld(self) -> "Planet":
         """Returns the homeworld of the person as a :class:`~aioswapi.Planet` object"""
@@ -116,7 +110,6 @@ class Person(_Object):
         self.homeworld = homeworld = Planet(raw_data, http=self.http)
         return homeworld
 
-       
     @copy_doc(Film.get_species)
     @alru_cache(maxsize=None)
     async def get_species(self) -> List["Specie"]:
@@ -129,7 +122,6 @@ class Person(_Object):
 
 
 class Planet(_Object):
-       
     @alru_cache(maxsize=None)
     async def get_residents(self) -> List[Person]:
         """Returns a list of residents in the planet as a list of :class:`aioswapi.Person` objects"""
@@ -140,7 +132,6 @@ class Planet(_Object):
         self.residents = residents
         return residents
 
-       
     @alru_cache(maxsize=None)
     async def get_films(self) -> List[Film]:
         """Returns a list of :class:`~aioswapi.Film` this person has been in"""
@@ -153,7 +144,6 @@ class Planet(_Object):
 
 
 class Specie(_Object):
-       
     @alru_cache(maxsize=None)
     async def get_people(self) -> List[Person]:
         """Returns the people who are a type of this species as a list of :class:`~aioswapi.Person` objects"""
@@ -164,7 +154,6 @@ class Specie(_Object):
         self.people = people
         return people
 
-       
     @alru_cache(maxsize=None)
     async def get_films(self) -> List[Film]:
         """Returns a list of films this type of species has been in as a list :class:`~aioswapi.Film` objects"""
@@ -177,7 +166,6 @@ class Specie(_Object):
 
 
 class Starship(_Object):
-       
     @alru_cache(maxsize=None)
     async def get_pilots(self) -> List[Person]:
         """Returns a list of :class:`~aioswapi.Person` who have piloted this starship"""
@@ -188,7 +176,6 @@ class Starship(_Object):
         self.pilots = pilots
         return pilots
 
-       
     @alru_cache(maxsize=None)
     async def get_films(self) -> List[Film]:
         """Returns a list of :class:`~aioswapi.Film` objects, it returns all the films this starship has appeared in"""
@@ -203,5 +190,10 @@ class Starship(_Object):
 class Vehicle(Starship):
     pass
 
-setattr(Vehicle.get_films, "__doc__", "Returns a list of :class:`~aioswapi.Film` objects, it returns all the films this vehicle has appeared in")
+
+setattr(
+    Vehicle.get_films,
+    "__doc__",
+    "Returns a list of :class:`~aioswapi.Film` objects, it returns all the films this vehicle has appeared in",
+)
 setattr(Vehicle.get_pilots, "__doc__", "Returns a list of :class:`~aioswapi.Person` who have piloted this vehicle")

@@ -1,13 +1,16 @@
 from __future__ import annotations
 
-from .utils import json_or_text
 import sys
-from typing import Any, Dict, Optional
+from typing import TYPE_CHECKING
+
+from .utils import json_or_text
+
+if TYPE_CHECKING:
+    from typing import Any, Dict, Optional
 
 import aiohttp
 
 BASE_URL = "https://swapi.dev/api"
-
 
 
 class HTTPClient:
