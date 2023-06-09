@@ -4,15 +4,16 @@ from types import TracebackType
 from typing import TYPE_CHECKING, TypeVar
 
 if TYPE_CHECKING:
-    from typing_extensions import Self
-    from typing import Optional, Type, List
+    from typing_extensions import Self, TracebackType
+    from typing import Optional, Type, List, TypeVar
+    
+    BE = TypeVar("BE", bound=BaseException)
 
 from async_lru import alru_cache
 
 from .http import HTTPClient
 from .objects import Film, Person, Planet, Specie, Starship, Vehicle
 
-BE = TypeVar("BE", bound=BaseException)
 
 __all__ = ("Client",)
 
