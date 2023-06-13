@@ -6,7 +6,7 @@ from typing import TYPE_CHECKING
 from .utils import json_or_text
 
 if TYPE_CHECKING:
-    from typing import Any, Dict, Optional
+    from typing import Any, Dict, Union
 
 import aiohttp
 
@@ -19,7 +19,7 @@ class HTTPClient:
     def __init__(
         self,
     ) -> None:
-        self.session: Optional[aiohttp.ClientSession] = None
+        self.session: Union[aiohttp.ClientSession, None] = None
 
         user_agent = "aio-swapi (https://github.com/Sengolda/aio-swapi) Python/{0[0]}.{0[1]} aiohttp/{1}"
         self.user_agent: str = user_agent.format(sys.version_info, aiohttp.__version__)

@@ -4,7 +4,7 @@ from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from typing_extensions import Self, TracebackType
-    from typing import Optional, Type, List, TypeVar
+    from typing import Union, Type, List, TypeVar
     
     BE = TypeVar("BE", bound=BaseException)
 
@@ -29,7 +29,7 @@ class Client:
         return self
 
     async def __aexit__(
-        self, exc_type: Optional[Type[BE]], exc_value: Optional[BE], exc_traceback: Optional[TracebackType]
+        self, exc_type: Union[Type[BE], None], exc_value: Union[BE, None], exc_traceback: Union[TracebackType, None]
     ) -> None:
         await self.close()
 
