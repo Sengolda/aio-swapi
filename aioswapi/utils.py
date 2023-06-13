@@ -4,12 +4,12 @@ from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from typing import Dict, Any, Callable, TypeVar
+
     T = TypeVar("T")
 
 import json
 
 import aiohttp
-
 
 
 async def json_or_text(response: aiohttp.ClientResponse) -> Dict[str, Any]:

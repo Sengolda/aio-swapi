@@ -5,7 +5,7 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from typing_extensions import Self, TracebackType
     from typing import Union, Type, List, TypeVar
-    
+
     BE = TypeVar("BE", bound=BaseException)
 
 from async_lru import alru_cache
